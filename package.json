@@ -59,7 +59,7 @@
     "husky": "^9.1.7",
     "jsdom": "^25.0.1",
     "lint-staged": "^17.3.0",
-    "markdownlint-cli2": "^0.23.2",
+    "markdownlint-cli2": "^0.23.3",
     "prettier": "^3.3.3",
     "tailwindcss": "^4",
     "typescript": "^5",
