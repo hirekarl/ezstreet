@@ -1,10 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import maplibregl, {
-  type GeoJSONSource,
-  type MapGeoJSONFeature,
-} from "maplibre-gl";
+import * as maplibregl from "maplibre-gl";
+import type { GeoJSONSource, MapGeoJSONFeature } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { FeatureCollection, Geometry } from "geojson";
 import {

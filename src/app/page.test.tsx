@@ -476,6 +476,17 @@ describe("Home", () => {
 
   it("surfaces the source-failure panel state when the request exceeds the fetch timeout", async () => {
     vi.useFakeTimers();
+    // Native AbortSignal timers are outside Vitest's fake clock.
+    const timeout = vi
+      .spyOn(AbortSignal, "timeout")
+      .mockImplementation((milliseconds) => {
+        const controller = new AbortController();
+        setTimeout(
+          () => controller.abort(new DOMException("Timed out", "TimeoutError")),
+          milliseconds,
+        );
+        return controller.signal;
+      });
     try {
       fetchMock.mockImplementationOnce(
         (_url: string, init: RequestInit) =>
@@ -493,16 +504,22 @@ describe("Home", () => {
       clickGenerate();
 
       expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(timeout).toHaveBeenCalledWith(30_000);
       expect(screen.getByRole("status")).toHaveTextContent(/retrieving/i);
 
       await act(async () => {
-        await vi.advanceTimersByTimeAsync(30_000);
+        await vi.advanceTimersByTimeAsync(29_999);
+      });
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1);
       });
 
       expect(screen.getByRole("alert")).toHaveTextContent(
         /required data could not be loaded/i,
       );
     } finally {
+      timeout.mockRestore();
       vi.useRealTimers();
     }
   });

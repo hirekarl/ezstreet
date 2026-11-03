@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   e42AtParkAveReportMock,
   partialSourceReportMock,
@@ -12,6 +12,10 @@ import type {
   PriorityZoneStatus,
 } from "../types/report";
 import ReportPanel from "./ReportPanel";
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 type PanelState =
   | "initial"
